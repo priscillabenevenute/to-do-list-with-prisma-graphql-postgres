@@ -1,22 +1,44 @@
-import { gql } from "apollo-server-express"
+import { gql } from "apollo-server-express";
 
 export const typeDefs = gql`
-
   type Task {
     id: Int!
-    title: String!
-    taskStatus: Boolean!
+    userId: Int!
+    title: String
+    taskStatus: Boolean
+  }
+
+  type User {
+    id: Int!
+    name: String
+    email: String
+    password: String
+    tasks: [Task]
+  }
+
+  input UserInput {
+    name: String
+    email: String
+    password: String
+  }
+
+  input TaskInput {
+    userId: Int!
+    title: String
   }
 
   type Query {
     tasks: [Task!]!
-    task(id: Int!): Task!
+    task(id: Int!, userId: Int!): Task
+    users: [User]
+    user(id: Int!): User!
+    userTasks(userId: Int!):[Task]
   }
 
   type Mutation {
-    createTask(title: String!): Task!
-    updateTask(id: Int!, title: String!, taskStatus: Boolean!): Task!
-    deleteTask(id: Int!): Task!
-  }
-`
-
+    createUser(data: UserInput!): User
+    createTask(data: TaskInput!): Task
+    updateUser(userId: Int!, name: String): User
+    updateTask(userId: Int!, id: Int!, title: String!, taskStatus: Boolean!): Task
+    deleteTask(userId: Int!, id: Int!): Task
+  }`
